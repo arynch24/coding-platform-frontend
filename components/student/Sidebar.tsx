@@ -15,6 +15,7 @@ import { usePathname } from 'next/navigation';
 import Image from 'next/image';
 import axios from 'axios';
 import LogoutDialog from '@/components/LogoutDialog';
+import { useAuthContext } from '@/context/AuthenticationContext';
 
 // Define the structure for navigation items
 interface NavItem {
@@ -37,6 +38,7 @@ const QCAuditSidebar: React.FC = () => {
     // State for logout dialog
     const [isLogoutDialogOpen, setIsLogoutDialogOpen] = useState(false);
     const [isLoggingOut, setIsLoggingOut] = useState(false);
+    const { user } = useAuthContext();
 
     // Check if screen is mobile and set responsive behavior
     useEffect(() => {
@@ -114,10 +116,11 @@ const QCAuditSidebar: React.FC = () => {
     const handleLogout = async () => {
         setIsLoggingOut(true);
         try {
-            await axios.get((`${process.env.NEXT_PUBLIC_IOICLUB_BACKEND_URL}/auth/logout`), {
+            await axios.post((`${process.env.NEXT_PUBLIC_IOICLUB_BACKEND_URL}/api/auth/logout`), {
                 withCredentials: true,
             });
-            router.push('/');
+            if(user?.role === 'TEACHER') window.location.href = `${process.env.NEXT_PUBLIC_IOI_CLUB_FRONTEND_URL}/auth/teacher/login`;
+            else if(user?.role === 'STUDENT') window.location.href = `${process.env.NEXT_PUBLIC_IOI_CLUB_FRONTEND_URL}/auth/student/login`;
         } catch (error) {
             if (axios.isAxiosError(error)) {
                 console.error('Logout failed:', error.response?.data || error.message);
