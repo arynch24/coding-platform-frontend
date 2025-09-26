@@ -45,24 +45,17 @@ const CodingPlatformHome = () => {
     }
   };
 
+  if (error) {
+    return (
+      <div className="h-screen bg-qc-accent/10 flex">
+        <ErrorBox message={error} onRetry={checkAuth} />
+      </div>
+    );
+  }
+
   return (
     <div className="h-screen bg-qc-accent/10 flex">
-      {loading ? (
-        <Loader text="Checking authentication..." />
-      ) : error ? (
-        <ErrorBox message={error} onRetry={checkAuth} />
-      ) : (
-        <div className="m-auto text-center">
-          <CircleAlert className="mx-auto mb-4 text-qc-primary" size={48} />
-          <h2 className="text-2xl font-semibold mb-2 text-qc-primary">Authentication Error</h2>
-          <p className="text-qc-secondary mb-4">Unable to authenticate. Please try again.</p>
-          <button
-            onClick={checkAuth}
-            className="px-4 py-2 bg-qc-primary text-white rounded hover:bg-qc-primary/90 transition"
-          > Retry
-          </button>
-        </div>
-      )}
+      {loading && <Loader text="Checking authentication..." />}
     </div>
   );
 };

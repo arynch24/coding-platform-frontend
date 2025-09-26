@@ -5,7 +5,7 @@ import { useParams } from 'next/navigation';
 import MonacoEditor from '@/components/MonacoEditor';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { tomorrow } from 'react-syntax-highlighter/dist/esm/styles/prism';
-import { parseMarkdown } from '@/lib/utils/parseMarkdown';
+import ReactMarkdown from "react-markdown"
 import { toast } from "sonner";
 
 // --- Extend Window interface for Monaco ---
@@ -200,7 +200,7 @@ const CodingProblemPage = () => {
             if (!problemId) return;
             setLoadingProblem(true);
             try {
-                const url =  `${process.env.NEXT_PUBLIC_CODING_BACKEND_URL}/contests/problem/detail/${problemId}?contestId=${contestId}`;
+                const url = `${process.env.NEXT_PUBLIC_CODING_BACKEND_URL}/contests/problem/detail/${problemId}?contestId=${contestId}`;
                 const res = await fetch(url, { credentials: 'include' });
                 if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
                 const data = await res.json();
@@ -467,7 +467,7 @@ const CodingProblemPage = () => {
             console.error("Submission failed:", error);
             toast.error("Failed to submit code. Please try again.");
             setIsSubmitting(false);
-        }finally{
+        } finally {
             setIsSubmitting(false);
         }
     };
@@ -679,21 +679,19 @@ const CodingProblemPage = () => {
                         <div className="flex-1 p-6 overflow-y-auto scrollbar-hide">
                             <div className="prose prose-invert max-w-none">
                                 <div className="text-gray-300 leading-relaxed mb-6 whitespace-pre-line">
-                                    <div
-                                        className="  max-w-none"
-                                        dangerouslySetInnerHTML={{
-                                            __html: `<p class="mb-4">${parseMarkdown(problemData?.problemDetail.problemStatement)}</p>`
-                                        }}
-                                    />
+                                    <div className="max-w-none">
+                                        <ReactMarkdown>
+                                            {problemData?.problemDetail.problemStatement || ''}
+                                        </ReactMarkdown>
+                                    </div>
                                 </div>
                                 <h4 className="font-semibold text-gray-100 mb-2">Constraints</h4>
                                 <div className="text-gray-300 mb-6 text-sm bg-gray-700 p-4 rounded-lg border border-gray-600">
-                                    <div
-                                        className="  max-w-none"
-                                        dangerouslySetInnerHTML={{
-                                            __html: `<p class="mb-4">${parseMarkdown(problemData?.problemDetail.constraints)}</p>`
-                                        }}
-                                    />
+                                    <div className="max-w-none">
+                                        <ReactMarkdown>
+                                            {problemData?.problemDetail.constraints || ''}
+                                        </ReactMarkdown>
+                                    </div>
                                 </div>
                                 <div className="flex flex-wrap gap-2 mb-6">
                                     {problemData?.problemDetail.problemTags.map(tag => (
