@@ -1,6 +1,8 @@
 import React from 'react';
 import { Button } from '../ui/Button';
 import ReactMarkdown from "react-markdown"
+import remarkMath from "remark-math";
+import rehypeKatex from "rehype-katex";
 
 interface MarkdownPreviewDialogProps {
     isOpen: boolean;
@@ -32,14 +34,18 @@ export const MarkdownPreviewDialog: React.FC<MarkdownPreviewDialogProps> = ({
                         ✕
                     </Button>
                 </div>
-                
+
                 <div className="flex-1 overflow-auto p-6">
                     <div className="bg-gray-50 rounded-md p-4 min-h-[200px] border">
                         {content ? (
-                            <div 
+                            <div
                                 className="prose prose-sm max-w-none"
                             >
-                                <ReactMarkdown>{content}</ReactMarkdown>
+                                <ReactMarkdown
+                                    remarkPlugins={[remarkMath]}
+                                    rehypePlugins={[rehypeKatex]}
+                                    children={content}
+                                />
                             </div>
                         ) : (
                             <p className="text-gray-400 italic text-center py-8">
@@ -48,7 +54,7 @@ export const MarkdownPreviewDialog: React.FC<MarkdownPreviewDialogProps> = ({
                         )}
                     </div>
                 </div>
-                
+
                 <div className="flex justify-end p-6 border-t border-gray-200">
                     <Button
                         variant="outline"

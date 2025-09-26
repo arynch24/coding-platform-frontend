@@ -7,6 +7,8 @@ import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { tomorrow } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import ReactMarkdown from "react-markdown"
 import { toast } from "sonner";
+import remarkMath from "remark-math";
+import rehypeKatex from "rehype-katex";
 
 // --- Extend Window interface for Monaco ---
 declare global {
@@ -680,17 +682,21 @@ const CodingProblemPage = () => {
                             <div className="prose prose-invert max-w-none">
                                 <div className="text-gray-300 leading-relaxed mb-6 whitespace-pre-line">
                                     <div className="max-w-none">
-                                        <ReactMarkdown>
-                                            {problemData?.problemDetail.problemStatement || ''}
-                                        </ReactMarkdown>
+                                        <ReactMarkdown
+                                            children={problemData?.problemDetail.problemStatement || ''}
+                                            remarkPlugins={[remarkMath]}
+                                            rehypePlugins={[rehypeKatex]}
+                                        />
                                     </div>
                                 </div>
                                 <h4 className="font-semibold text-gray-100 mb-2">Constraints</h4>
                                 <div className="text-gray-300 mb-6 text-sm bg-gray-700 p-4 rounded-lg border border-gray-600">
                                     <div className="max-w-none">
-                                        <ReactMarkdown>
-                                            {problemData?.problemDetail.constraints || ''}
-                                        </ReactMarkdown>
+                                        <ReactMarkdown
+                                            children={problemData?.problemDetail.constraints || ''}
+                                            remarkPlugins={[remarkMath]}
+                                            rehypePlugins={[rehypeKatex]}
+                                        />
                                     </div>
                                 </div>
                                 <div className="flex flex-wrap gap-2 mb-6">
